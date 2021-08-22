@@ -112,6 +112,26 @@ class _RegisterState extends State<Register> {
                               child: Column(
                                 children: <Widget>[
                                   Custom_textfield(
+                                    label: 'fName',
+                                    textEditingController:
+                                    provider.fNameController,
+                                  ),
+                                  Custom_textfield(
+                                    label: 'lName',
+                                    textEditingController:
+                                    provider.lNameController,
+                                  ),
+                                  Custom_textfield(
+                                    label: 'Country',
+                                    textEditingController:
+                                    provider.countryController,
+                                  ),
+                                  Custom_textfield(
+                                    label: 'City',
+                                    textEditingController:
+                                    provider.cityController,
+                                  ),
+                                  Custom_textfield(
                                     label: 'Email',
                                     textEditingController:
                                         provider.emailController,

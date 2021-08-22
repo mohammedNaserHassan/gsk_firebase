@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gsk_firebase/Chating/Models/RegisterRequest.dart';
 import 'package:gsk_firebase/Services/customDialog.dart';
 
 class Auth_helper {
@@ -7,11 +8,12 @@ class Auth_helper {
   static Auth_helper auth_helper = Auth_helper._();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-  signup(String email, String password) async {
+  Future<UserCredential> signup(String email, String password) async {
     try {
       UserCredential userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       print(userCredential.user.uid);
+      return userCredential;
 
 //same the id but large digits and has a expire time and it is more secure
       print(userCredential.user.getIdToken());
