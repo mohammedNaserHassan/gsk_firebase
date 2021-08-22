@@ -30,13 +30,12 @@ class Auth_helper {
     }
   }
 
-  signin(String email, String password) async {
+  Future<UserCredential> signin(String email,String password) async {
     try {
       UserCredential userCredential = await firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       vereifyEmail();
 
-      // print(userCredential.user.uid);
     } on FirebaseAuthException catch (e) {
       print(e.code);
       if (e.code == 'user-not-found') {

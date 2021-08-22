@@ -88,9 +88,8 @@ class AuthProvider extends ChangeNotifier {
   }
 
   login() async {
-    await Auth_helper.auth_helper
-        .signin(emailController.text, passwordController.text);
-
+   UserCredential userCredential = await Auth_helper.auth_helper.signin(emailController.text, passwordController.text);
+await fireStore_Helper.helper.getUserFromFirestore('zAr98MNwxfTFP5tYtGIF848cPw93');
     bool isVerified = Auth_helper.auth_helper.checkEmailVerification();
     print(isVerified);
     if (isVerified) {

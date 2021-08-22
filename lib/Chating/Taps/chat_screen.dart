@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gsk_firebase/Auth/Helper/fireStore_Helper.dart';
 import 'package:gsk_firebase/Auth/Helper/helper.dart';
 import 'package:gsk_firebase/Providers/Auth_provider.dart';
 import 'package:gsk_firebase/Chating/Taps/people.dart';
@@ -37,6 +38,13 @@ class ChatScreen extends StatelessWidget {
               Icons.search,
               color: Colors.white,
             )),
+        Center(
+          child: TextButton(
+              child: Text('GetAllUsers'),
+              onPressed: () {
+            fireStore_Helper.helper.getAllUsersFromFirestore();
+          }),
+        ),
         Consumer<AuthProvider>(
           builder: (context,provider,c)=>IconButton(
               onPressed: () {
