@@ -32,17 +32,17 @@ class fireStore_Helper{
   }
   Future<List<CountryModel>> getAllCountreis() async {
 
-     try{
-       QuerySnapshot<Map<String, dynamic>> querySnapshot =
-       await firebaseFirestore.collection('Countreis').get();
-       List<CountryModel> countrymodel = querySnapshot.docs.map((e){
-         Map map =e.data();
-         map['id'] =e.id;
-         return CountryModel.fromjsion(map);
-       }).toList();
-       return countrymodel;
-     }on Exception catch(e){
-
-      }
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+      await firebaseFirestore.collection('Countries').get();
+      List<CountryModel> countries = querySnapshot.docs.map((e) {
+        Map map = e.data();
+        map['id'] = e.id;
+        return CountryModel.fromjsion(map);
+      }).toList();
+      return countries;
+    } on Exception catch (e) {
+      // TODO
+    }
   }
 }

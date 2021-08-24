@@ -1,9 +1,6 @@
 class CountryModel{
-  CountryModel._();
- static CountryModel countryModel = CountryModel._();
   String id,name;
   List<dynamic> cities;
-
   CountryModel({this.id, this.name, this.cities});
 
   CountryModel.fromjsion(Map map){

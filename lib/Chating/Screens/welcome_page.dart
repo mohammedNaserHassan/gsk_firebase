@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gsk_firebase/Auth/Helper/helper.dart';
 import 'package:gsk_firebase/Chating/Screens/sigh_in_or_sign_up.dart';
 import 'package:gsk_firebase/Chating/Taps/chat_screen.dart';
+import 'package:gsk_firebase/Providers/Auth_provider.dart';
 import 'package:gsk_firebase/Services/Router.dart';
+import 'package:provider/provider.dart';
 
 class welcomPage extends StatelessWidget {
   const welcomPage();
@@ -35,41 +37,44 @@ class welcomPage extends StatelessWidget {
               flex: 3,
             ),
             FittedBox(
-              child: TextButton(
-                  onPressed: () {
-                    AppRouter.appRouter.gotoPagewithReplacment(
-                        Helper.x.GetUsername()==null?
-                        sigh_in_or_sign_up.routeName
-                        :ChatScreen.routeName
-                    );
+              child: Consumer<AuthProvider>(
+               builder : (context,provider,c)=>TextButton(
+                    onPressed: () {
+                    print(provider.countries);
+                      AppRouter.appRouter.gotoPagewithReplacment(
+                          Helper.x.GetUsername()==null?
+                          sigh_in_or_sign_up.routeName
+                          :ChatScreen.routeName
+                      );
 
 
 
 
-                  },
-                  child: Row(
-                    children: [
-                      Text(
-                        'Skip',
-                        style: TextStyle(
-                            color: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                .color
-                                .withOpacity(0.5),
-                            fontSize: 25),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 16,
-                        color: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .color
-                            .withOpacity(0.5),
-                      )
-                    ],
-                  )),
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Skip',
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .color
+                                  .withOpacity(0.5),
+                              fontSize: 25),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .color
+                              .withOpacity(0.5),
+                        )
+                      ],
+                    )),
+              ),
             ),
             Spacer(
               flex: 1,

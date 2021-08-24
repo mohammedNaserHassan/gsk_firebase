@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gsk_firebase/Auth/Helper/auth_helper.dart';
+import 'package:gsk_firebase/Auth/Helper/fireStorageHelper.dart';
 import 'package:gsk_firebase/Auth/Helper/fireStore_Helper.dart';
 import 'package:gsk_firebase/Auth/Helper/helper.dart';
 import 'package:gsk_firebase/Auth/ui/login.dart';
@@ -12,10 +15,20 @@ import 'package:gsk_firebase/Chating/Models/messages_.dart';
 import 'package:gsk_firebase/Chating/Taps/chat_screen.dart';
 import 'package:gsk_firebase/Services/Router.dart';
 import 'package:gsk_firebase/Services/customDialog.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AuthProvider extends ChangeNotifier {
   AuthProvider(){
-    getCountries();
+    getCountriesFromFirestore();
+  }
+
+  //upload Image
+  File file;
+  selectFile() async {
+    XFile imageFile =
+    await ImagePicker().pickImage(source: ImageSource.gallery);
+    this.file = File(imageFile.path);
+    notifyListeners();
   }
   String x = chatsData.map((e) => e.image).toString();
   bool isFilled = true;
@@ -66,33 +79,44 @@ class AuthProvider extends ChangeNotifier {
   setChatMessage(ChatMessage chatMessage) {
     this.chatMessage = chatMessage;
   }
-  CountryModel countrySelected ;
-  String selectedcity;
- List<String> cities = [];
-  selectCountry(CountryModel countryModel){
-    this.countrySelected = countryModel;
-    this.cities= CountryModel.countryModel.cities;
+  List<CountryModel> countries;
+  List<dynamic> cities = [];
+  CountryModel selectedCountry;
+  String selectedCity;
+  selectCountry(CountryModel countryModel) {
+    this.selectedCountry = countryModel;
+    this.cities = countryModel.cities;
+    selectCity(cities.first.toString());
     notifyListeners();
   }
-List<CountryModel> countries;
-List<String> citie =[];
-  getCountries()async{
-  List<CountryModel> countries=await  fireStore_Helper.helper.getAllCountreis();
-  this.countries =countries;
-  notifyListeners();
+
+  selectCity(dynamic city) {
+    this.selectedCity = city;
+    notifyListeners();
+  }
+
+  getCountriesFromFirestore() async {
+    List<CountryModel> countries =
+    await fireStore_Helper.helper.getAllCountreis();
+    this.countries = countries;
+    selectCountry(countries.first);
+    notifyListeners();
   }
   register() async {
     try {
       UserCredential userCredential = await Auth_helper.auth_helper
           .signup(emailController.text, passwordController.text);
-      RegisterRequest registerRequest =RegisterRequest(
-        id: userCredential.user.uid,
+      String imageUrl =
+      await fireStorageHelper.helper.uploadImage(file);
+      RegisterRequest registerRequest = RegisterRequest(
+          imgurl: imageUrl,
+          id: userCredential.user.uid,
+          city: selectedCity,
+          country: selectedCountry.name,
+          Email: emailController.text,
           fName: fNameController.text,
           lName: lNameController.text,
-          country: countryController.text,
-          city: cityController.text,
-          Email: emailController.text
-      );
+          password: passwordController.text);
       await fireStore_Helper.helper.addUserToFireBase(registerRequest);
       await Auth_helper.auth_helper.vereifyEmail();
       await Auth_helper.auth_helper.signOut();
