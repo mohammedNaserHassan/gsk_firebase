@@ -5,6 +5,7 @@ import 'package:gsk_firebase/Auth/Helper/auth_helper.dart';
 import 'package:gsk_firebase/Auth/Helper/fireStore_Helper.dart';
 import 'package:gsk_firebase/Auth/Helper/helper.dart';
 import 'package:gsk_firebase/Auth/ui/login.dart';
+import 'package:gsk_firebase/Chating/Models/CountryModel.dart';
 import 'package:gsk_firebase/Chating/Models/RegisterRequest.dart';
 import 'package:gsk_firebase/Chating/Models/chat.dart';
 import 'package:gsk_firebase/Chating/Models/messages_.dart';
@@ -13,6 +14,9 @@ import 'package:gsk_firebase/Services/Router.dart';
 import 'package:gsk_firebase/Services/customDialog.dart';
 
 class AuthProvider extends ChangeNotifier {
+  AuthProvider(){
+    getCountries();
+  }
   String x = chatsData.map((e) => e.image).toString();
   bool isFilled = true;
   bool isFill = false;
@@ -62,7 +66,21 @@ class AuthProvider extends ChangeNotifier {
   setChatMessage(ChatMessage chatMessage) {
     this.chatMessage = chatMessage;
   }
-
+  CountryModel countrySelected ;
+  String selectedcity;
+ List<String> cities = [];
+  selectCountry(CountryModel countryModel){
+    this.countrySelected = countryModel;
+    this.cities= CountryModel.countryModel.cities;
+    notifyListeners();
+  }
+List<CountryModel> countries;
+List<String> citie =[];
+  getCountries()async{
+  List<CountryModel> countries=await  fireStore_Helper.helper.getAllCountreis();
+  this.countries =countries;
+  notifyListeners();
+  }
   register() async {
     try {
       UserCredential userCredential = await Auth_helper.auth_helper

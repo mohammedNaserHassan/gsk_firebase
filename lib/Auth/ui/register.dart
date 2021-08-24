@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gsk_firebase/Animation/FadeAnimation.dart';
+import 'package:gsk_firebase/Chating/Models/CountryModel.dart';
 import 'package:gsk_firebase/Providers/Auth_provider.dart';
 import 'package:gsk_firebase/widgets/CustomButton.dart';
 import 'package:gsk_firebase/widgets/Custom_text_field.dart';
@@ -142,6 +143,49 @@ class _RegisterState extends State<Register> {
                                         provider.passwordController,
                                     obscure: true,
                                   ),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 10),
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey,)
+                                          ,borderRadius: BorderRadius.circular(15)
+                                    ),
+                                    child: DropdownButton<CountryModel>(
+                                      isExpanded: true,
+                                      underline: Container(),
+                                      value: provider.countrySelected,
+                                      onChanged: (c){
+                                        provider.selectCountry(c);
+                                      },
+                                      items: provider.countries.map((e){
+                                        return DropdownMenuItem<CountryModel>(
+                                            child: Text(e.name),
+                                        value: e,
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                              Container(
+                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey,)
+                                    ,borderRadius: BorderRadius.circular(15)
+                                ),
+                                child: DropdownButton<CountryModel>(
+                                  isExpanded: true,
+                                  underline: Container(),
+                                  value: provider.countrySelected,
+                                  onChanged: (c){
+                                    provider.selectCountry(c);
+                                  },
+                                  items: provider.countries.map((e){
+                                    return DropdownMenuItem<CountryModel>(
+                                      child: Text(e.name),
+                                      value: e,
+                                    );
+                                  }).toList(),
+                                ),)
                                 ],
                               ),
                             )),
