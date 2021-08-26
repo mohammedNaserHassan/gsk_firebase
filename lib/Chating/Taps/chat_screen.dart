@@ -20,7 +20,7 @@ class ChatScreen extends StatelessWidget {
 
   ChatScreen();
 
-  final List<Widget> _children = [Body(), people(), calls(), profile()];
+  final List<Widget> _children = [Body(), people(), calls(), ProfilePage()];
 
   AppBar BuildAbb() {
     return AppBar(
@@ -148,6 +148,7 @@ class ChatScreen extends StatelessWidget {
                             color: kPrimaryColor,
                           ),
                           onTap: () async{
+                            provider.getUserFromFirestore();
                           }),
                     ),
 

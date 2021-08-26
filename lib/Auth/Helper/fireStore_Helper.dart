@@ -8,12 +8,15 @@ class fireStore_Helper{
   fireStore_Helper._();
   static fireStore_Helper helper = fireStore_Helper._();
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
   addUserToFireBase(RegisterRequest registerRequest)async{
     try {
      await firebaseFirestore.collection('Users').doc(registerRequest.id).set(registerRequest.toMap());
     } on Exception catch (e) {
     }
   }
+
+
   Future<UserModel>getUserFromFirestore(String userId) async{
     DocumentSnapshot documentSnapshot =
     await firebaseFirestore.collection('Users').doc(userId).get();
@@ -50,6 +53,13 @@ return UserModel.fromMap(documentSnapshot.data());
     } on Exception catch (e) {
       // TODO
     }
+  }
+
+  updateProfile(UserModel userModel) async {
+    await firebaseFirestore
+        .collection('Users')
+        .doc(userModel.id)
+        .update(userModel.toMap());
   }
 
 }

@@ -197,19 +197,14 @@ class AuthProvider extends ChangeNotifier {
 
 //////GetCurrent User//////////////////////////////
 
-  getUser() async{
-   User userCredential = await Auth_helper.auth_helper.getCurrentUser();
-  }
-
   UserModel user;
-  getCurrentUser()async{
+  getUserFromFirestore() async {
     String userId = Auth_helper.auth_helper.getUserId();
-  user = await  fireStore_Helper.helper.getUserFromFirestore(userId);
-  notifyListeners();
+    user = await fireStore_Helper.helper.getUserFromFirestore(userId);
+    notifyListeners();
   }
 
-  String nameDrawer,emailDrawer;
-//////CheckUserFound
+//////Check User Found///////
   checkLogin(){
   bool isLoggin = Auth_helper.auth_helper.checkUser();
   if(isLoggin){
@@ -219,9 +214,51 @@ class AuthProvider extends ChangeNotifier {
 AppRouter.appRouter.gotoPagewithReplacment(sigh_in_or_sign_up.routeName);
   }
   }
+  ///////////////////////
+  fillControllers() {
+    emailController.text = user.email;
+    fNameController.text = user.fName;
+    lNameController.text = user.lName;
+    countryController.text = user.country;
+    cityController.text = user.city;
+  }
+
+  File updatedFile;
+  captureUpdateProfileImage() async {
+    XFile file = await ImagePicker().pickImage(source: ImageSource.gallery);
+    this.updatedFile = File(file.path);
+    notifyListeners();
+  }
+
+  updateProfile() async {
+    String imageUrl;
+    if (updatedFile != null) {
+      imageUrl = await fireStorageHelper.helper
+          .uploadImage(updatedFile);
+    }
+    UserModel userModel = imageUrl == null
+        ? UserModel(
+        city: cityController.text,
+        country: countryController.text,
+        fName: fNameController.text,
+        lName: lNameController.text,
+        id: user.id)
+        : UserModel(
+        city: cityController.text,
+        country: countryController.text,
+        fName: fNameController.text,
+        lName: lNameController.text,
+        id: user.id,
+        imageUrl: imageUrl);
+
+    await fireStore_Helper.helper.updateProfile(userModel);
+    getUserFromFirestore();
+    Navigator.of(AppRouter.appRouter.navkey.currentContext).pop();
+  }
 //////////////////Sign out////////////////////////////////////
   logOut() async {
     await Auth_helper.auth_helper.signOut();
     AppRouter.appRouter.gotoPagewithReplacment(welcomPage.routeName);
   }
+  /////////////////////
 }

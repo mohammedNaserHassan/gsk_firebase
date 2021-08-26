@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class UserModel {
   String id;
   String email;
@@ -6,7 +7,7 @@ class UserModel {
   String country;
   String fName;
   String lName;
-  String imgUrl;
+  String imageUrl;
   UserModel({
     @required this.id,
     @required this.email,
@@ -14,7 +15,7 @@ class UserModel {
     @required this.country,
     @required this.fName,
     @required this.lName,
-    @required this.imgUrl,
+    @required this.imageUrl,
   });
 
   UserModel.fromMap(Map map) {
@@ -24,6 +25,15 @@ class UserModel {
     this.country = map['country'];
     this.fName = map['fName'];
     this.lName = map['lName'];
-    this.imgUrl = map['imgUrl'];
+    this.imageUrl = map['imageUrl'];
+  }
+  toMap() {
+    return {
+      'city': this.city,
+      'country': this.country,
+      'fName': this.fName,
+      'lName': this.lName,
+      'imageUrl': this.imageUrl
+    };
   }
 }
