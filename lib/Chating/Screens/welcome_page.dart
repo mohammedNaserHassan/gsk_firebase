@@ -7,7 +7,8 @@ import 'package:gsk_firebase/Services/Router.dart';
 import 'package:provider/provider.dart';
 
 class welcomPage extends StatelessWidget {
-  const welcomPage();
+ static final routeName = 'welcome';
+  welcomPage();
 
   @override
   Widget build(BuildContext context) {

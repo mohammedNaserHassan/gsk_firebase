@@ -14,12 +14,12 @@ class fireStore_Helper{
     } on Exception catch (e) {
     }
   }
-  getUserFromFirestore(String userId) async {
+  Future<UserModel>getUserFromFirestore(String userId) async{
     DocumentSnapshot documentSnapshot =
     await firebaseFirestore.collection('Users').doc(userId).get();
-
-    print(documentSnapshot.data());
+return UserModel.fromMap(documentSnapshot.data());
   }
+
 
   Future<List<UserModel>> getAllUsersFromFirestore() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
@@ -27,9 +27,15 @@ class fireStore_Helper{
     List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = querySnapshot.docs;
     List<UserModel> users =
     docs.map((e) => UserModel.fromMap(e.data())).toList();
+  String id = users.first.id;
     print(users.length);
     return users;
   }
+
+
+
+
+
   Future<List<CountryModel>> getAllCountreis() async {
 
     try {
@@ -45,4 +51,5 @@ class fireStore_Helper{
       // TODO
     }
   }
+
 }

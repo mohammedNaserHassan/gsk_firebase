@@ -72,7 +72,10 @@ class Auth_helper {
   Future<User> getCurrentUser() async {
     try {
       var currentuser = firebaseAuth.currentUser;
-      if (currentuser != null) return firebaseAuth.currentUser;
+      if (currentuser != null){
+
+        print(currentuser);
+        return firebaseAuth.currentUser;}
     } on Exception catch (e) {
       // TODO
     }
@@ -86,6 +89,17 @@ class Auth_helper {
         CustomDialog.customDialog.showCustom(
             'The user must reauthenticate before this operation can be executed.');
       }
+    }
+  }
+  String getUserId(){
+   return  firebaseAuth.currentUser.uid;
+  }
+  bool checkUser(){
+    if(firebaseAuth.currentUser==null){
+      return false;
+    }
+    else{
+      return true;
     }
   }
 }
