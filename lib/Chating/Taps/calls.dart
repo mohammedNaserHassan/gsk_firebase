@@ -7,11 +7,17 @@ class calls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView(
-          children: chatsData
-              .map((e) => buildRow(e.name, e.time, e.image, context))
-              .toList()),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kPrimaryColor,
+        title: Text('Calls'),
+      ),
+      body: Container(
+        child: ListView(
+            children: chatsData
+                .map((e) => buildRow(e.name, e.time, e.image, context))
+                .toList()),
+      ),
     );
   }
 

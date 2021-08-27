@@ -12,58 +12,82 @@ import 'filled_outline_button.dart';
 class Body extends StatelessWidget {
   Body();
 
+
+  AppBar BuildAbb() {
+    return AppBar(
+      elevation: 0.0,
+      backgroundColor: kPrimaryColor,
+      automaticallyImplyLeading: false,
+      title: Text(
+        'Chats',
+        style: TextStyle(fontSize: 22),
+      ),
+      actions: [
+        IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.search,
+              color: Colors.white,
+            )),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
-      builder: (context,provider,c)=>Column(
-        children: [
-          Container(
-            padding: EdgeInsets.fromLTRB(
-                kDefaultPadding, 0, kDefaultPadding, kDefaultPadding),
-            color: kPrimaryColor,
-            child: Row(
-              children: [
-                FillOutlineButton(
-                  text: 'Recent Message',
-                  press: () {
-                    provider.setFilled();
-                  },
-                  isFilled: provider.isFilled,
-                ),
-                SizedBox(
-                  width: kDefaultPadding,
-                ),
-                FillOutlineButton(
-                  isFilled: provider.isFill,
-                  text: 'Active',
-                  press: () {
-                    provider.setFilled();
-                  },
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-              child: ListView(
-                  children: chatsData.map((e) {
-            return Consumer<AuthProvider>(
-              builder: (context,provider,c)=>ChatCard(
-                chat: e,
-                press: () {
-                  provider.setVariables(
-                    img: e.image,
-                    time: e.time,
-                    name: e.name,
-                    mg: e.image,
-                  );
-                  AppRouter.appRouter.goWithAnimation(message_screen());
-                  //AppRouter.appRouter.gotoPage(message_screen.routeName);
-
-                },
+      builder: (context,provider,c)=>Scaffold(
+        appBar: BuildAbb(),
+        body: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(
+                  kDefaultPadding, 0, kDefaultPadding, kDefaultPadding),
+              color: kPrimaryColor,
+              child: Row(
+                children: [
+                  FillOutlineButton(
+                    text: 'Recent Message',
+                    press: () {
+                      provider.setFilled();
+                    },
+                    isFilled: provider.isFilled,
+                  ),
+                  SizedBox(
+                    width: kDefaultPadding,
+                  ),
+                  FillOutlineButton(
+                    isFilled: provider.isFill,
+                    text: 'Active',
+                    press: () {
+                      provider.setFilled();
+                    },
+                  ),
+                ],
               ),
-            );
-          }).toList()))
-        ],
+            ),
+            Expanded(
+                child: ListView(
+                    children: chatsData.map((e) {
+              return Consumer<AuthProvider>(
+                builder: (context,provider,c)=>ChatCard(
+                  chat: e,
+                  press: () {
+                    provider.setVariables(
+                      img: e.image,
+                      time: e.time,
+                      name: e.name,
+                      mg: e.image,
+                    );
+                    AppRouter.appRouter.goWithAnimation(message_screen());
+                    //AppRouter.appRouter.gotoPage(message_screen.routeName);
+
+                  },
+                ),
+              );
+            }).toList()))
+          ],
+        ),
       ),
     );
   }

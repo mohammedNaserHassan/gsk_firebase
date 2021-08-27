@@ -13,32 +13,33 @@ import 'Providers/themeProvider.dart';
 import 'Auth/ui/login.dart';
 import 'Auth/ui/register.dart';
 
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Helper.x.initSharedPreference();
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider<AuthProvider>(
-        create: (context) => AuthProvider(),
-      ),
-      ChangeNotifierProvider<ThemeProvider>(
-        create: (context) => ThemeProvider(),)
-    ]
-    ,child: MaterialApp(
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthProvider>(
+          create: (context) => AuthProvider(),
+        ),
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider(),
+        )
+      ],
+      child: MaterialApp(
         routes: {
-          Login.routeName:(context)=>Login(),
-          Register.routeName:(context)=>Register(),
-          ResetPassword.routeName:(context)=>ResetPassword(),
-          ChatScreen.routeName:(context)=>ChatScreen(),
-          message_screen.routeName:(context)=>message_screen(),
-          sigh_in_or_sign_up.routeName:(context)=>sigh_in_or_sign_up(),
-          welcomPage.routeName:(context)=>welcomPage(),
+          Login.routeName: (context) => Login(),
+          Register.routeName: (context) => Register(),
+          ResetPassword.routeName: (context) => ResetPassword(),
+          ChatScreen.routeName: (context) => ChatScreen(),
+          message_screen.routeName: (context) => message_screen(),
+          sigh_in_or_sign_up.routeName: (context) => sigh_in_or_sign_up(),
+          welcomPage.routeName: (context) => welcomPage(),
         },
         navigatorKey: AppRouter.appRouter.navkey,
         debugShowCheckedModeBanner: false,
-        home: App(),),
+        home: App(),
+      ),
     ),
-
   );
 }
-

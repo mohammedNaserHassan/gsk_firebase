@@ -21,9 +21,9 @@ import 'package:image_picker/image_picker.dart';
 
 class AuthProvider extends ChangeNotifier {
   String x = chatsData.map((e) => e.image).toString();
+
   AuthProvider() {
     getCountriesFromFirestore();
-
   }
 
   //upload Image
@@ -152,7 +152,7 @@ class AuthProvider extends ChangeNotifier {
       print(e);
     }
 
-    //clearController();
+    clearController();
     notifyListeners();
   }
 
@@ -162,8 +162,8 @@ class AuthProvider extends ChangeNotifier {
   login() async {
     UserCredential userCredential = await Auth_helper.auth_helper
         .signin(emailController.text, passwordController.text);
-    await fireStore_Helper.helper
-        .getUserFromFirestore('zAr98MNwxfTFP5tYtGIF848cPw93');
+    String userId = Auth_helper.auth_helper.getUserId();
+    await fireStore_Helper.helper.getUserFromFirestore();
     bool isVerified = Auth_helper.auth_helper.checkEmailVerification();
     print(isVerified);
     if (isVerified) {
@@ -175,7 +175,7 @@ class AuthProvider extends ChangeNotifier {
           sendVerification);
     }
 
-  //  clearController();
+    clearController();
     notifyListeners();
   }
 
@@ -198,22 +198,23 @@ class AuthProvider extends ChangeNotifier {
 //////GetCurrent User//////////////////////////////
 
   UserModel user;
+
   getUserFromFirestore() async {
-    String userId = Auth_helper.auth_helper.getUserId();
-    user = await fireStore_Helper.helper.getUserFromFirestore(userId);
+    user = await fireStore_Helper.helper.getUserFromFirestore();
+   // print(user.toMap());
     notifyListeners();
   }
 
 //////Check User Found///////
-  checkLogin(){
-  bool isLoggin = Auth_helper.auth_helper.checkUser();
-  if(isLoggin){
-    AppRouter.appRouter.gotoPagewithReplacment(ChatScreen.routeName);
+  checkLogin() {
+    bool isLoggin = Auth_helper.auth_helper.checkUser();
+    if (isLoggin) {
+      AppRouter.appRouter.gotoPagewithReplacment(ChatScreen.routeName);
+    } else {
+      AppRouter.appRouter.gotoPagewithReplacment(sigh_in_or_sign_up.routeName);
+    }
   }
-  else{
-AppRouter.appRouter.gotoPagewithReplacment(sigh_in_or_sign_up.routeName);
-  }
-  }
+
   ///////////////////////
   fillControllers() {
     emailController.text = user.email;
@@ -224,6 +225,7 @@ AppRouter.appRouter.gotoPagewithReplacment(sigh_in_or_sign_up.routeName);
   }
 
   File updatedFile;
+
   captureUpdateProfileImage() async {
     XFile file = await ImagePicker().pickImage(source: ImageSource.gallery);
     this.updatedFile = File(file.path);
@@ -233,32 +235,34 @@ AppRouter.appRouter.gotoPagewithReplacment(sigh_in_or_sign_up.routeName);
   updateProfile() async {
     String imageUrl;
     if (updatedFile != null) {
-      imageUrl = await fireStorageHelper.helper
-          .uploadImage(updatedFile);
+      imageUrl = await fireStorageHelper.helper.uploadImage(updatedFile);
     }
     UserModel userModel = imageUrl == null
         ? UserModel(
-        city: cityController.text,
-        country: countryController.text,
-        fName: fNameController.text,
-        lName: lNameController.text,
-        id: user.id)
+      email: emailController.text,
+            city: cityController.text,
+            country: countryController.text,
+            fName: fNameController.text,
+            lName: lNameController.text,
+            id: user.id)
         : UserModel(
-        city: cityController.text,
-        country: countryController.text,
-        fName: fNameController.text,
-        lName: lNameController.text,
-        id: user.id,
-        imageUrl: imageUrl);
+      email: emailController.text,
+            city: cityController.text,
+            country: countryController.text,
+            fName: fNameController.text,
+            lName: lNameController.text,
+            id: user.id,
+        imgurl: imageUrl);
 
     await fireStore_Helper.helper.updateProfile(userModel);
     getUserFromFirestore();
     Navigator.of(AppRouter.appRouter.navkey.currentContext).pop();
   }
+
 //////////////////Sign out////////////////////////////////////
   logOut() async {
     await Auth_helper.auth_helper.signOut();
     AppRouter.appRouter.gotoPagewithReplacment(welcomPage.routeName);
   }
-  /////////////////////
+/////////////////////
 }

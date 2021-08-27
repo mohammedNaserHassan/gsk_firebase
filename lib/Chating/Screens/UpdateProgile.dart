@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:gsk_firebase/Chating/View/constants.dart';
 import 'package:gsk_firebase/Providers/Auth_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,8 @@ class _ProfilePageState extends State<UpdateProgile> {
     return Scaffold(
         backgroundColor: Colors.grey[300],
         appBar: AppBar(
-          title: Text('Editing Profile Page'),
+          backgroundColor: kPrimaryColor,
+          title: Text('Editing Profile'),
           actions: [
             IconButton(
               onPressed: () {
@@ -49,19 +51,31 @@ class _ProfilePageState extends State<UpdateProgile> {
                     },
                     child: provider.updatedFile == null
                         ? CircleAvatar(
-                      radius: 80,
-                      backgroundImage:
-                      NetworkImage(provider.user.imageUrl),
-                    )
+                            radius: 80,
+                            //   backgroundImage: NetworkImage(provider.user.imageUrl),
+                          )
                         : CircleAvatar(
-                      radius: 80,
-                      backgroundImage: FileImage(provider.updatedFile),
-                    ),
+                            radius: 80,
+                            backgroundImage: FileImage(provider.updatedFile),
+                          ),
                   ),
-                  ItemWidget('first Name', provider.fNameController),
-                  ItemWidget('last Name', provider.fNameController),
-                  ItemWidget('country Name', provider.countryController),
-                  ItemWidget('city Name', provider.cityController),
+                  ItemWidget(
+                    label: 'Email',
+                    valueController: provider.emailController,
+                    state: false,
+                  ),
+                  ItemWidget(
+                      label: 'first Name',
+                      valueController: provider.fNameController),
+                  ItemWidget(
+                      label: 'last Name',
+                      valueController: provider.lNameController),
+                  ItemWidget(
+                      label: 'country Name',
+                      valueController: provider.countryController),
+                  ItemWidget(
+                      label: 'city Name',
+                      valueController: provider.cityController),
                 ],
               ),
             );
@@ -72,8 +86,11 @@ class _ProfilePageState extends State<UpdateProgile> {
 
 class ItemWidget extends StatelessWidget {
   String label;
+  bool state;
   TextEditingController valueController;
-  ItemWidget(this.label, this.valueController);
+
+  ItemWidget({this.label, this.valueController, this.state = true});
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -90,6 +107,7 @@ class ItemWidget extends StatelessWidget {
           ),
           Expanded(
             child: TextField(
+              enabled: state,
               controller: valueController,
               style: TextStyle(fontSize: 22),
             ),

@@ -7,7 +7,7 @@ class UserModel {
   String country;
   String fName;
   String lName;
-  String imageUrl;
+  String imgurl;
   UserModel({
     @required this.id,
     @required this.email,
@@ -15,25 +15,26 @@ class UserModel {
     @required this.country,
     @required this.fName,
     @required this.lName,
-    @required this.imageUrl,
+    @required this.imgurl,
   });
 
   UserModel.fromMap(Map map) {
     this.id = map['id'];
-    this.email = map['email'];
+    this.email = map['Email'];
     this.city = map['city'];
     this.country = map['country'];
     this.fName = map['fName'];
     this.lName = map['lName'];
-    this.imageUrl = map['imageUrl'];
+    this.imgurl = map['imgurl'];
   }
   toMap() {
     return {
       'city': this.city,
+      'Email': this.email,
       'country': this.country,
       'fName': this.fName,
       'lName': this.lName,
-      'imageUrl': this.imageUrl
+      'imgurl': this.imgurl
     };
   }
 }

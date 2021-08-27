@@ -81,16 +81,7 @@ class Auth_helper {
     }
   }
 
-  deleteUser() async {
-    try {
-      await firebaseAuth.currentUser.delete();
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'requires-recent-login') {
-        CustomDialog.customDialog.showCustom(
-            'The user must reauthenticate before this operation can be executed.');
-      }
-    }
-  }
+
   String getUserId(){
    return  firebaseAuth.currentUser.uid;
   }
