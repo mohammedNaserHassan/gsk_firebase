@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gsk_firebase/Auth/Helper/fireStore_Helper.dart';
 import 'package:gsk_firebase/Providers/Auth_provider.dart';
 import 'package:gsk_firebase/Chating/Models/chat.dart';
 import 'package:gsk_firebase/Chating/Screens/message_screen.dart';
@@ -11,7 +13,6 @@ import 'filled_outline_button.dart';
 
 class Body extends StatelessWidget {
   Body();
-
 
   AppBar BuildAbb() {
     return AppBar(
@@ -36,7 +37,7 @@ class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
-      builder: (context,provider,c)=>Scaffold(
+      builder: (context, provider, c) => Scaffold(
         appBar: BuildAbb(),
         body: Column(
           children: [
@@ -66,26 +67,44 @@ class Body extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(
-                child: ListView(
-                    children: chatsData.map((e) {
-              return Consumer<AuthProvider>(
-                builder: (context,provider,c)=>ChatCard(
-                  chat: e,
-                  press: () {
-                    provider.setVariables(
-                      img: e.image,
-                      time: e.time,
-                      name: e.name,
-                      mg: e.image,
-                    );
-                    AppRouter.appRouter.goWithAnimation(message_screen());
-                    //AppRouter.appRouter.gotoPage(message_screen.routeName);
+            provider.friends == null
+                ? CircularProgressIndicator()
+                : Expanded(
+                    child:StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                      stream: fireStore_Helper.helper.getFreindStream(),
+    builder: (context, snapshots) {
+    if (!snapshots.hasData) {
+    return Center(child: CircularProgressIndicator());
+    } else {
+      QuerySnapshot<Map<String, dynamic>> query = snapshots.data;
+      List<Map> freinds = query.docs.map((e) => e.data()).toList();
+       return  ListView.builder(
+        itemCount: freinds.length,
+        itemBuilder: (context, index) {
+          return ChatCard(
+            name: freinds[index]['name'],
+            image: freinds[index]['image'],
+            time: freinds[index]['time'],
+            isActive: freinds[index]['isActive'],
+            lastMessage: freinds[index]['lastMessage'],
+            press: () {
+              Navigator.of(context)
+                  .pushReplacement(MaterialPageRoute(
+                      builder: (c) => message_screen(
+                            image: freinds[index]['name'],
+                            name:  freinds[index]['image'],
+                          )));
+            },
+          );
+        },
+      );
+    }
+    }
+                    )
 
-                  },
-                ),
-              );
-            }).toList()))
+
+
+            )
           ],
         ),
       ),

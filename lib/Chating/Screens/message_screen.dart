@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 
 class message_screen extends StatelessWidget {
   static final routeName = 'MessageName';
-
-  message_screen();
+String name,image;
+  message_screen({this.name,this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class message_screen extends StatelessWidget {
       builder: (context, provider, c) => Scaffold(
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(60),
-            child: buildAppBarMessage()),
+            child: buildAppBarMessage(image: name,name:image ,)),
         body: body_message(),
       ),
     );

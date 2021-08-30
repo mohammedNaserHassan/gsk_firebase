@@ -8,7 +8,9 @@ class calls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: kPrimaryColor,
         title: Text('Calls'),
       ),
@@ -23,7 +25,12 @@ class calls extends StatelessWidget {
 
   Widget buildRow(
       String name, String date, String image, BuildContext context) {
-    return Padding(
+    return Container(
+      margin: EdgeInsets.symmetric( horizontal: kDefaultPadding / 2, vertical: kDefaultPadding / 2),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Colors.white
+      ),
       padding: EdgeInsets.symmetric(
           horizontal: kDefaultPadding / 2, vertical: kDefaultPadding / 2),
       child: Column(
@@ -59,9 +66,6 @@ class calls extends StatelessWidget {
                 color: kPrimaryColor,
               ))
             ],
-          ),
-          Divider(
-            color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.1),
           ),
         ],
       ),

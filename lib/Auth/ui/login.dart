@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gsk_firebase/Animation/FadeAnimation.dart';
+import 'package:gsk_firebase/Auth/ui/register.dart';
 import 'package:gsk_firebase/Providers/Auth_provider.dart';
 import 'package:gsk_firebase/Auth/ui/resetPassword.dart';
 import 'package:gsk_firebase/Services/Router.dart';
@@ -146,8 +148,29 @@ class _RegisterState extends State<Login> {
                               ),
                             )),
                         SizedBox(
-                          height: 70,
+                          height: 50,
                         ),
+                       FadeAnimation(
+                                1.5,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Don\’t have an account?"),
+                                    GestureDetector(
+                                      onTap: (){
+                                        AppRouter.appRouter.gotoPagewithReplacment(Register.routeName);
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(horizontal: 5),
+                                        child: Text(
+                                         'Sign up',
+                                          style: TextStyle(
+                                              color: Color.fromRGBO(143, 148, 251, 1)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )),
                         GestureDetector(
                             onTap: () {
                               AppRouter.appRouter
@@ -155,10 +178,13 @@ class _RegisterState extends State<Login> {
                             },
                             child: FadeAnimation(
                                 1.5,
-                                Text(
-                                  "Forgot Password?",
-                                  style: TextStyle(
-                                      color: Color.fromRGBO(143, 148, 251, 1)),
+                                Container(
+                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  child: Text(
+                                    "Forgot Password?",
+                                    style: TextStyle(
+                                        color: Color.fromRGBO(143, 148, 251, 1)),
+                                  ),
                                 ))),
                       ],
                     ),

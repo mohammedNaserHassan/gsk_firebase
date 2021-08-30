@@ -5,12 +5,17 @@ import '../View/constants.dart';
 
 class ChatCard extends StatelessWidget {
   ChatCard({
-    this.chat,
+    this.image,
     this.press,
+    this.time,
+    this.name,
+    this.lastMessage,
+    this.isActive,
   });
 
-  final Chat chat;
   final VoidCallback press;
+  String image,lastMessage,name,time;
+  bool isActive;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +30,9 @@ class ChatCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundImage: AssetImage(chat.image),
+                  backgroundImage: NetworkImage(image),
                 ),
-                if (chat.isActive)
+                if (isActive)
                   Positioned(
                     right: 0,
                     bottom: 0,
@@ -53,7 +58,7 @@ class ChatCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      chat.name,
+                      name,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ),
@@ -61,7 +66,7 @@ class ChatCard extends StatelessWidget {
                     Opacity(
                       opacity: 0.64,
                       child: Text(
-                        chat.lastMessage,
+                        lastMessage,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -72,7 +77,7 @@ class ChatCard extends StatelessWidget {
             ),
             Opacity(
               opacity: 0.64,
-              child: Text(chat.time),
+              child: Text(time),
             ),
           ],
         ),

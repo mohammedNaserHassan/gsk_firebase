@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gsk_firebase/Animation/FadeAnimation.dart';
 import 'package:gsk_firebase/Chating/Models/CountryModel.dart';
 import 'package:gsk_firebase/Providers/Auth_provider.dart';
+import 'package:gsk_firebase/Services/Router.dart';
 import 'package:gsk_firebase/widgets/CustomButton.dart';
 import 'package:gsk_firebase/widgets/Custom_text_field.dart';
 import 'package:provider/provider.dart';
+
+import 'login.dart';
 
 class Register extends StatefulWidget {
   static final routeName = 'RegisterName';
@@ -225,6 +228,26 @@ class _RegisterState extends State<Register> {
                                   label: 'Sign Up',
                                   function: provider.register,
                                 ))),
+                        SizedBox(height: 10,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Have an account?"),
+                            GestureDetector(
+                              onTap: (){
+                                AppRouter.appRouter.gotoPagewithReplacment(Login.routeName);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 5),
+                                child: Text(
+                                  'Sign in',
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(143, 148, 251, 1)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   )

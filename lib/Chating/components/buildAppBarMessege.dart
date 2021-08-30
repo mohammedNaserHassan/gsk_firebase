@@ -4,16 +4,19 @@ import 'package:gsk_firebase/Providers/Auth_provider.dart';
 import 'package:gsk_firebase/Chating/View/constants.dart';
 import 'package:gsk_firebase/Services/Router.dart';
 import 'package:provider/provider.dart';
+
 class buildAppBarMessage extends StatelessWidget {
-  buildAppBarMessage();
+  String image, name;
+
+  buildAppBarMessage({this.image, this.name});
 
   @override
   Widget build(BuildContext context) {
-    return  AppBar(
+    return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: kPrimaryColor,
       title: Consumer<AuthProvider>(
-        builder:(context,provider,x)=> Row(
+        builder: (context, provider, x) => Row(
           children: [
             TextButton(
               child: Icon(
@@ -25,15 +28,19 @@ class buildAppBarMessage extends StatelessWidget {
               },
             ),
             CircleAvatar(
-              backgroundImage: AssetImage(provider.img),
+              backgroundImage: NetworkImage(
+                  image),
             ),
             Column(
               children: [
-                Text(
-                  provider.name,
-                  style: TextStyle(fontSize: 16),
+                Container(
+                  margin: EdgeInsets.only(right: 50),
+                  child: Text(
+                    name,
+                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                  ),
                 ),
-                Text('Active ${provider.time} ', style: TextStyle(fontSize: 13)),
+                Text('Active 8m ago', style: TextStyle(fontSize: 13)),
               ],
             )
           ],

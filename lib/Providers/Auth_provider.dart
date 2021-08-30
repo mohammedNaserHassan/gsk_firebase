@@ -7,9 +7,9 @@ import 'package:gsk_firebase/Auth/Helper/fireStorageHelper.dart';
 import 'package:gsk_firebase/Auth/Helper/fireStore_Helper.dart';
 import 'package:gsk_firebase/Auth/Helper/helper.dart';
 import 'package:gsk_firebase/Auth/ui/login.dart';
+import 'package:gsk_firebase/Chating/Models/ChatFirebase.dart';
 import 'package:gsk_firebase/Chating/Models/CountryModel.dart';
 import 'package:gsk_firebase/Chating/Models/RegisterRequest.dart';
-import 'package:gsk_firebase/Chating/Models/UserModel.dart';
 import 'package:gsk_firebase/Chating/Models/chat.dart';
 import 'package:gsk_firebase/Chating/Models/messages_.dart';
 import 'package:gsk_firebase/Chating/Screens/sigh_in_or_sign_up.dart';
@@ -18,33 +18,45 @@ import 'package:gsk_firebase/Chating/Taps/chat_screen.dart';
 import 'package:gsk_firebase/Services/Router.dart';
 import 'package:gsk_firebase/Services/customDialog.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class AuthProvider extends ChangeNotifier {
-  String x = chatsData.map((e) => e.image).toString();
 
+////////////////////////Constructor////////////////////////
   AuthProvider() {
     getCountriesFromFirestore();
+    getAllUsers();
+    getAllFreinds();
   }
+  ////////////////////////////////////////////////
+
+  /////Controller of message chat
+  TextEditingController msgController = TextEditingController();
+  clearMsg(){
+    msgController.clear();
+  }
+//////////////////////////////////////////////////
+
 
   //upload Image
-  File file;
 
+  File file;
   selectFile() async {
     XFile imageFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     this.file = File(imageFile.path);
     notifyListeners();
   }
-
   ///////////
 
   ///SetColor of Button////
   bool isFilled = true;
   bool isFill = false;
-
+bool recent=true;
   setFilled() {
     this.isFilled = !this.isFilled;
     this.isFill = !this.isFill;
+    this.recent=!this.recent;
     notifyListeners();
   }
 
@@ -52,13 +64,38 @@ class AuthProvider extends ChangeNotifier {
 
   ///select of button/////////
   int selected = 0;
-
+  TabController tabController;
   setSelected(int selected) {
     this.selected = selected;
+    tabController.animateTo(selected);
     notifyListeners();
   }
 
 //////////////////////////////
+
+///////////////////Send Message To Firebase
+
+  String message;
+  sendToFire()async{
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat().add_jm().format(now);
+    fireStore_Helper.helper.addMessageToFireStore({
+      'message':this.message,
+      'timeDate':formattedDate
+    });
+  }
+////////////////////////////////////////////////////////////
+
+///////////////////Get Message from firebase
+  List<ChatFire> chatFire;
+getMessage()async{
+ chatFire = await fireStore_Helper.helper.getMessageFromFireStore();
+ print(chatFire.asMap());
+
+}
+
+  ////////////////////////////////////////////////////////////
+
 
   //////Controller//////
   TextEditingController emailController = TextEditingController();
@@ -79,25 +116,6 @@ class AuthProvider extends ChangeNotifier {
 
 ////////////////////////////////////
 
-  ///body of message//////
-  String name, time, img, mg;
-
-  setVariables({String name, String time, String img, String mg}) {
-    this.name = name;
-    this.time = time;
-    this.img = img;
-    this.mg = mg;
-  }
-
-//////////////////////////////////////////
-
-  Chat chat;
-  VoidCallback press;
-  ChatMessage chatMessage;
-
-  setChatMessage(ChatMessage chatMessage) {
-    this.chatMessage = chatMessage;
-  }
 
   //////Country and City  Firebase////////////
   List<CountryModel> countries;
@@ -118,11 +136,16 @@ class AuthProvider extends ChangeNotifier {
   }
 
   getCountriesFromFirestore() async {
-    List<CountryModel> countries =
-        await fireStore_Helper.helper.getAllCountreis();
-    this.countries = countries;
-    selectCountry(countries.first);
-    notifyListeners();
+    try {
+      myId =Auth_helper.auth_helper.getUserId();
+      List<CountryModel> countries =
+          await fireStore_Helper.helper.getAllCountreis();
+      this.countries = countries;
+      selectCountry(countries.first);
+      notifyListeners();
+    } on Exception catch (e) {
+      // TODO
+    }
   }
 
   /////////////////////////////////
@@ -194,16 +217,82 @@ class AuthProvider extends ChangeNotifier {
     Auth_helper.auth_helper.resetPassword(emailController.text);
     clearController();
   }
+/////////////
+
+  //////Get Friend//////////////////////////////
+
+  Chat chatFreind;
+
+  getFriendFromFire() async {
+    chatFreind = await fireStore_Helper.helper.getFriendFromFirebase('rdfyghhjkkk');
+    // print(user.toMap());
+    notifyListeners();
+  }
+  ///////////////
+  //////////////////////////////Controller of Freind
+  TextEditingController nFreind = TextEditingController();
+  TextEditingController idFreind = TextEditingController();
+  //////////////////////////////////////////////////////////////////////////////////////////
+
+//////////Add new Freind////
+
+  File fileFreind;
+  selectFileFreind() async {
+    XFile imageFile =
+    await ImagePicker().pickImage(source: ImageSource.gallery);
+    this.fileFreind = File(imageFile.path);
+    notifyListeners();
+  }
+
+
+
+  addNewFreind()async{
+    String imageUrl = await fireStorageHelper.helper.uploadImage(fileFreind);
+    Chat freinds = Chat(
+      id: idFreind.text,
+    image: imageUrl,
+    name: nFreind.text,
+    isActive: false,
+    lastMessage: 'are you ready',
+    time: '20m ago'
+    );
+    await fireStore_Helper.helper.addFriendToFirestore(freinds);
+    idFreind.clear();
+    nFreind.clear();
+    fileFreind=null;
+    notifyListeners();
+
+  }
+
+  ////////////////////////////////////////
 
 //////GetCurrent User//////////////////////////////
 
-  UserModel user;
+  RegisterRequest user;
 
   getUserFromFirestore() async {
     user = await fireStore_Helper.helper.getUserFromFirestore();
    // print(user.toMap());
     notifyListeners();
   }
+  ///////////////
+
+   //////Get All Users////////
+  List<RegisterRequest> users;
+  String myId;
+
+  getAllUsers()async{
+    users = await fireStore_Helper.helper.getAllUsersFromFirestore();
+    users.removeWhere((element) => element.id==myId);
+  }
+  /////////////////////
+
+  //////Get All Freinds////////
+  List<Chat> friends;
+  getAllFreinds()async{
+    friends = await fireStore_Helper.helper.getAllFreindsFromFirestore();
+  }
+  /////////////////////
 
 //////Check User Found///////
   checkLogin() {
@@ -217,7 +306,7 @@ class AuthProvider extends ChangeNotifier {
 
   ///////////////////////
   fillControllers() {
-    emailController.text = user.email;
+    emailController.text = user.Email;
     fNameController.text = user.fName;
     lNameController.text = user.lName;
     countryController.text = user.country;
@@ -237,22 +326,14 @@ class AuthProvider extends ChangeNotifier {
     if (updatedFile != null) {
       imageUrl = await fireStorageHelper.helper.uploadImage(updatedFile);
     }
-    UserModel userModel = imageUrl == null
-        ? UserModel(
-      email: emailController.text,
-            city: cityController.text,
-            country: countryController.text,
-            fName: fNameController.text,
-            lName: lNameController.text,
-            id: user.id)
-        : UserModel(
-      email: emailController.text,
+    RegisterRequest userModel = RegisterRequest(
+      Email: emailController.text,
             city: cityController.text,
             country: countryController.text,
             fName: fNameController.text,
             lName: lNameController.text,
             id: user.id,
-        imgurl: imageUrl);
+        imgurl: imageUrl??user.imgurl);
 
     await fireStore_Helper.helper.updateProfile(userModel);
     getUserFromFirestore();

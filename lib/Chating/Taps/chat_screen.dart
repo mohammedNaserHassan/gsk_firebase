@@ -1,10 +1,5 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:gsk_firebase/Auth/Helper/auth_helper.dart';
-import 'package:gsk_firebase/Auth/Helper/fireStore_Helper.dart';
-import 'package:gsk_firebase/Auth/Helper/helper.dart';
-import 'package:gsk_firebase/Chating/Models/UserModel.dart';
 import 'package:gsk_firebase/Providers/Auth_provider.dart';
 import 'package:gsk_firebase/Chating/Taps/people.dart';
 import 'package:gsk_firebase/Chating/Taps/profile.dart';
@@ -25,10 +20,13 @@ class ChatScreen extends StatefulWidget {
   _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    Provider.of<AuthProvider>(context, listen: false).tabController =
+        TabController(length: 4, vsync: this);
     Provider.of<AuthProvider>(context, listen: false).getUserFromFirestore();
   }
 
@@ -60,133 +58,74 @@ class _ChatScreenState extends State<ChatScreen> {
       onWillPop: () {
         exit(0);
       },
-      child: Container(
-        decoration:
-            BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
-        child: Consumer<AuthProvider>(
-          builder: (context, provider, c) => Scaffold(
-            body: _children[provider.selected],
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: kPrimaryColor,
-              onPressed: () {
-                showDialog(
-                    context: AppRouter.appRouter.navkey.currentContext,
-                    builder: (x) {
-                      return CustomInseration();
-                    });
-              },
-              child: Icon(
-                Icons.person_add_alt_1,
-                color: Colors.white,
-              ),
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: provider.selected,
-              onTap: (select) {
-                provider.setSelected(select);
-              },
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: kContentColorDarkTheme,
-              selectedItemColor: Colors.white70,
-              unselectedItemColor: kContentColorLightTheme.withOpacity(0.32),
-              selectedIconTheme: IconThemeData(color: kPrimaryColor),
-              items: [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.messenger), label: 'Chats'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.people), label: 'People'),
-                BottomNavigationBarItem(icon: Icon(Icons.call), label: 'Calls'),
-                BottomNavigationBarItem(
-                    icon: CircleAvatar(
-                      radius: 20,
-                      backgroundImage: NetworkImage(provider.user.imgurl == null
-                          ? 'https://images.freeimages.com/images/small-previews/f37/cloudy'
-                              '-scotland-1392088.jpg'
-                          : provider.user.imgurl),
-                    ),
-                    label: 'Profile'),
-              ],
-            ),
-            drawer: Drawer(
-              child: Consumer<AuthProvider>(
-                builder: (context, provider, c) => ListView(
-                  children: [
-                    Container(
-                      color: kPrimaryColor,
-                      height: 150,
-                      child: UserAccountsDrawerHeader(
-                          otherAccountsPicturesSize: Size(65, 65),
-                          otherAccountsPictures: [
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundImage: NetworkImage(provider
-                                          .user.imgurl ==
-                                      null
-                                  ? 'https://images.freeimages.com/images/small-previews/f37/cloudy'
-                                      '-scotland-1392088.jpg'
-                                  : provider.user.imgurl),
-                            ),
-                          ],
-                          decoration: BoxDecoration(
-                              color: kPrimaryColor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          accountName: Row(
-                            children: [
-                              Text(
-                                provider.user.fName,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                provider.user.lName,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                          accountEmail: Text(provider.user.email,
-                              style: TextStyle(color: Colors.white))),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Center(
-                      child: ListTile(
-                          title: Text('Get All Users'),
-                          trailing: Icon(
-                            Icons.supervised_user_circle_rounded,
-                            color: kPrimaryColor,
-                          ),
-                          onTap: () {
-                            fireStore_Helper.helper.getAllUsersFromFirestore();
-                          }),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          Helper.x.Signout();
-                          provider.logOut();
-                          exit(0);
-                        },
-                        icon: ListTile(
-                          title: Text('Log out'),
-                          trailing: Icon(
-                            Icons.login_outlined,
-                            color: kPrimaryColor,
-                          ),
+      child: Consumer<AuthProvider>(
+        builder: (context,provider,v)=>DefaultTabController(
+          length: 4,
+          child:provider.user==null?Container(): Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: Consumer<AuthProvider>(
+              builder: (context, provider, c) => Scaffold(
+                body: TabBarView(
+                    controller: provider.tabController, children: _children),
+                floatingActionButton: FloatingActionButton(
+                  backgroundColor: kPrimaryColor,
+                  onPressed: () {
+                    showDialog(
+                        context: AppRouter.appRouter.navkey.currentContext,
+                        builder: (x) {
+                          return CustomInseration();
+                        });
+                  },
+                  child: Icon(
+                    Icons.person_add_alt_1,
+                    color: Colors.white,
+                  ),
+                ),
+                bottomNavigationBar: BottomNavigationBar(
+                  currentIndex: provider.selected,
+                  onTap: (select) {
+                    provider.setSelected(select);
+                  },
+                  backgroundColor: kContentColorDarkTheme,
+                  type: BottomNavigationBarType.fixed,
+                  items: [
+                    BottomNavigationBarItem(
+                        icon: Icon(
+                          Icons.messenger,
+                          color: kPrimaryColor,
+                        ),
+                        title: Text(
+                          'Chat',
+                          style: TextStyle(color: kPrimaryColor),
                         )),
-                    Center(
-                      child: ListTile(
-                          title: Text('Get Current User'),
-                          trailing: Icon(
-                            Icons.person,
-                            color: kPrimaryColor,
-                          ),
-                          onTap: () async {
-                            provider.getUserFromFirestore();
-                            // fireStore_Helper.helper.getUserFromFirestore();
-                          }),
+                    BottomNavigationBarItem(
+                        icon: Icon(
+                          Icons.people,
+                          color: kPrimaryColor,
+                        ),
+                        title: Text(
+                          'People',
+                          style: TextStyle(color: kPrimaryColor),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: Icon(
+                          Icons.call,
+                          color: kPrimaryColor,
+                        ),
+                        title: Text(
+                          'Call',
+                          style: TextStyle(color: kPrimaryColor),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage( provider.user.imgurl),
+                        ),
+                        title: Text(
+                          'Profile',
+                          style: TextStyle(color: kPrimaryColor),
+                        )
                     ),
                   ],
                 ),

@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:gsk_firebase/Auth/Helper/helper.dart';
 import 'package:gsk_firebase/Chating/Screens/UpdateProgile.dart';
 import 'package:gsk_firebase/Chating/View/constants.dart';
 import 'package:gsk_firebase/Providers/Auth_provider.dart';
@@ -41,7 +43,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 icon: Icon(Icons.edit)),
             IconButton(
                 onPressed: () {
+                  Helper.x.Signout();
                   Provider.of<AuthProvider>(context, listen: false).logOut();
+                  exit(0);
                 },
                 icon: Icon(Icons.logout))
           ],
@@ -69,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         ItemWidget(
                           label: 'Email:',
-                          value: provider.user.email ?? 'null',
+                          value: provider.user.Email ?? 'null',
                           size: 14,
                         ),
                         ItemWidget(

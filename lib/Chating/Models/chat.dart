@@ -1,17 +1,40 @@
 class Chat {
-  final String name, lastMessage, image, time;
-  final bool isActive;
+   String name, lastMessage, image, time,id;
+   bool isActive;
 
   Chat({
-    this.name = '',
-    this.lastMessage = '',
-    this.image = '',
-    this.time = '',
-    this.isActive = false,
+    this.id,
+    this.name,
+    this.lastMessage,
+    this.image,
+    this.time,
+    this.isActive,
   });
+
+
+  toMap() {
+    return {
+      'id':this.id,
+      'image': this.image,
+      'isActive': this.isActive,
+      'name': this.name,
+      'lastMessage': this.lastMessage,
+      'time': this.time,
+    };
+  }
+
+   Chat.fromMap(Map map) {
+    this.image = map['image'];
+    this.id = map['id'];
+    this.isActive = map['isActive'];
+    this.name = map['name'];
+    this.time = map['time'];
+    this.lastMessage = map['lastMessage'];
+  }
+
 }
 
-List chatsData = [
+List<Chat> chatsData = [
   Chat(
     name: "Jenny Wilson",
     lastMessage: "Hope you are doing well...",

@@ -41,16 +41,13 @@ class welcomPage extends StatelessWidget {
               child: Consumer<AuthProvider>(
                builder : (context,provider,c)=>TextButton(
                     onPressed: () {
-                    print(provider.countries);
+                      provider.getMessage();
+                      provider.getUserFromFirestore();
                       AppRouter.appRouter.gotoPagewithReplacment(
                           Helper.x.GetUsername()==null?
                           sigh_in_or_sign_up.routeName
                           :ChatScreen.routeName
                       );
-
-
-
-
                     },
                     child: Row(
                       children: [
