@@ -7,15 +7,13 @@ import 'package:gsk_firebase/Chating/Taps/chat_screen.dart';
 import 'package:gsk_firebase/Services/Router.dart';
 import 'package:provider/provider.dart';
 import 'AppFire.dart';
-import 'Auth/Helper/helper.dart';
 import 'Chating/Screens/sigh_in_or_sign_up.dart';
 import 'Providers/themeProvider.dart';
 import 'Auth/ui/login.dart';
 import 'Auth/ui/register.dart';
 
-void main() async {
+void main(){
   WidgetsFlutterBinding.ensureInitialized();
-  await Helper.x.initSharedPreference();
   runApp(
     MultiProvider(
       providers: [

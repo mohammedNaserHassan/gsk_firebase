@@ -61,7 +61,7 @@ class _ChatScreenState extends State<ChatScreen>
       child: Consumer<AuthProvider>(
         builder: (context,provider,v)=>DefaultTabController(
           length: 4,
-          child:provider.user==null?Container(): Container(
+          child:provider.user==null?Center(child: CircularProgressIndicator(),): Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             child: Consumer<AuthProvider>(

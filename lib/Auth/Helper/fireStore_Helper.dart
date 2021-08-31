@@ -68,7 +68,7 @@ addMessageToFireStore(Map map)async{
   ///////////////////////Get FireStream
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getFireStream(){
-    return firebaseFirestore.collection('Chats').snapshots();
+    return firebaseFirestore.collection('Chats').orderBy('timeDate', descending: false).snapshots();
 }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getFreindStream(){
@@ -94,9 +94,7 @@ addMessageToFireStore(Map map)async{
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await firebaseFirestore.collection('Countries').get();
       List<CountryModel> countries = querySnapshot.docs.map((e) {
-        Map map = e.data();
-        map['id'] = e.id;
-        return CountryModel.fromjsion(map);
+        return CountryModel.fromjsion(e.data());
       }).toList();
       return countries;
     } on Exception catch (e) {

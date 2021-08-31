@@ -26,11 +26,11 @@ class body_message extends StatelessWidget {
                 } else {
                   QuerySnapshot<Map<String, dynamic>> query = snapshots.data;
                   List<Map> messages = query.docs.map((e) => e.data()).toList();
-                  messages.sort((a, b) {
-                    var adate = a['timeDate'];
-                    var bdate = b['timeDate'];
-                    return adate.compareTo(bdate);
-                  });
+                  // messages.sort((a, b) {
+                  //   var adate = a['timeDate'];
+                  //   var bdate = b['timeDate'];
+                  //   return adate.compareTo(bdate);
+                  // });
                   return ListView.builder(
                     itemCount: messages.length,
                     itemBuilder: (context, index) {

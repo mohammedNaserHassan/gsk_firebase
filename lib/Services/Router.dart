@@ -6,10 +6,7 @@ class AppRouter{
   AppRouter._();
   static AppRouter appRouter =AppRouter._();
   GlobalKey<NavigatorState> navkey = GlobalKey<NavigatorState>();
-gotoPage(String routeName){
-navkey.currentState.pushNamed(routeName);
 
-}
 goWithAnimation(Widget widget){
   navkey.currentState.pushReplacement(
     PageTransition(

@@ -174,7 +174,7 @@ class _RegisterState extends State<Login> {
                         GestureDetector(
                             onTap: () {
                               AppRouter.appRouter
-                                  .gotoPage(ResetPassword.routeName);
+                                  .gotoPagewithReplacment(ResetPassword.routeName);
                             },
                             child: FadeAnimation(
                                 1.5,

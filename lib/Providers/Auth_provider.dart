@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:gsk_firebase/Auth/Helper/auth_helper.dart';
 import 'package:gsk_firebase/Auth/Helper/fireStorageHelper.dart';
 import 'package:gsk_firebase/Auth/Helper/fireStore_Helper.dart';
-import 'package:gsk_firebase/Auth/Helper/helper.dart';
 import 'package:gsk_firebase/Auth/ui/login.dart';
 import 'package:gsk_firebase/Chating/Models/ChatFirebase.dart';
 import 'package:gsk_firebase/Chating/Models/CountryModel.dart';
@@ -23,10 +22,8 @@ import 'package:intl/intl.dart';
 class AuthProvider extends ChangeNotifier {
 
 ////////////////////////Constructor////////////////////////
-  AuthProvider() {
+  AuthProvider(){
     getCountriesFromFirestore();
-    getAllUsers();
-    getAllFreinds();
   }
   ////////////////////////////////////////////////
 
@@ -118,7 +115,7 @@ getMessage()async{
 
 
   //////Country and City  Firebase////////////
-  List<CountryModel> countries;
+  List<CountryModel> countries=[];
   List<dynamic> cities = [];
   CountryModel selectedCountry;
   String selectedCity;
@@ -137,10 +134,9 @@ getMessage()async{
 
   getCountriesFromFirestore() async {
     try {
-      myId =Auth_helper.auth_helper.getUserId();
-      List<CountryModel> countries =
+     // myId =Auth_helper.auth_helper.getUserId();
+      this.countries=
           await fireStore_Helper.helper.getAllCountreis();
-      this.countries = countries;
       selectCountry(countries.first);
       notifyListeners();
     } on Exception catch (e) {
@@ -191,7 +187,6 @@ getMessage()async{
     print(isVerified);
     if (isVerified) {
       AppRouter.appRouter.gotoPagewithReplacment(ChatScreen.routeName);
-      await Helper.x.SaveUsername(emailController.text);
     } else {
       CustomDialog.customDialog.showCustom(
           'You have to verify your email,press ok to send another email',
@@ -216,6 +211,7 @@ getMessage()async{
   resetPassword() async {
     Auth_helper.auth_helper.resetPassword(emailController.text);
     clearController();
+    AppRouter.appRouter.gotoPagewithReplacment(Login.routeName);
   }
 /////////////
 
@@ -280,7 +276,6 @@ getMessage()async{
    //////Get All Users////////
   List<RegisterRequest> users;
   String myId;
-
   getAllUsers()async{
     users = await fireStore_Helper.helper.getAllUsersFromFirestore();
     users.removeWhere((element) => element.id==myId);
@@ -298,6 +293,11 @@ getMessage()async{
   checkLogin() {
     bool isLoggin = Auth_helper.auth_helper.checkUser();
     if (isLoggin) {
+      this.myId = Auth_helper.auth_helper.getUserId();
+      getMessage();
+      getUserFromFirestore();
+      getAllUsers();
+      getAllFreinds();
       AppRouter.appRouter.gotoPagewithReplacment(ChatScreen.routeName);
     } else {
       AppRouter.appRouter.gotoPagewithReplacment(sigh_in_or_sign_up.routeName);
