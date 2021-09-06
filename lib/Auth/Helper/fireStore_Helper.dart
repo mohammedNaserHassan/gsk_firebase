@@ -3,14 +3,13 @@ import 'package:gsk_firebase/Chating/Models/ChatFirebase.dart';
 import 'package:gsk_firebase/Chating/Models/CountryModel.dart';
 import 'package:gsk_firebase/Chating/Models/RegisterRequest.dart';
 import 'package:gsk_firebase/Chating/Models/chat.dart';
-
 import 'auth_helper.dart';
 
 class fireStore_Helper {
   fireStore_Helper._();
+
   static fireStore_Helper helper = fireStore_Helper._();
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-
 
 ////Add User and Get it
   addUserToFireBase(RegisterRequest registerRequest) async {
@@ -26,54 +25,69 @@ class fireStore_Helper {
     String userId = Auth_helper.auth_helper.getUserId();
     DocumentSnapshot documentSnapshot =
         await firebaseFirestore.collection('Users').doc(userId).get();
-  //  print(documentSnapshot.data());
+    //  print(documentSnapshot.data());
     return RegisterRequest.fromMap(documentSnapshot.data());
   }
+
 ////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////add Friend and get it
   addFriendToFirestore(Chat chat) async {
     try {
-      await firebaseFirestore
-          .collection('Freinds')
-          .doc()
-          .set(chat.toMap());
+      await firebaseFirestore.collection('Freinds').doc().set(chat.toMap());
     } on Exception catch (e) {}
   }
+
   Future<Chat> getFriendFromFirebase(String userId) async {
     DocumentSnapshot documentSnapshot =
-    await firebaseFirestore.collection('Freinds').doc(userId).get();
+        await firebaseFirestore.collection('Freinds').doc(userId).get();
     //  print(documentSnapshot.data());
     return Chat.fromMap(documentSnapshot.data());
   }
+
 ////////////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////Add Message and get it
 
-addMessageToFireStore(Map map)async{
-    firebaseFirestore.collection('Chats').add({...map,'userId':Auth_helper.auth_helper.getUserId()});
-}
+  addMessageToFireStore(Map map) async {
+    firebaseFirestore
+        .collection('Chats')
+        .add({...map, 'userId': Auth_helper.auth_helper.getUserId()});
+  }
 
-  Future<List<ChatFire>> getMessageFromFireStore()async{
+  Future<List<ChatFire>> getMessageFromFireStore() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
-    await firebaseFirestore.collection('Chats').get();
+        await firebaseFirestore.collection('Chats').get();
     List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = querySnapshot.docs;
-    List<ChatFire> chats =
-    docs.map((e) => ChatFire.fromMap(e.data())).toList();
+    List<ChatFire> chats = docs.map((e) => ChatFire.fromMap(e.data())).toList();
     String id = chats.first.userId;
     print(chats.length);
     return chats;
-}
+  }
+
 ////////////////////////////////////////////////////////////////////////////////
   ///////////////////////Get FireStream
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getFireStream(){
-    return firebaseFirestore.collection('Chats').orderBy('timeDate', descending: false).snapshots();
-}
+  Stream<QuerySnapshot<Map<String, dynamic>>> getFireStream() {
+    return firebaseFirestore
+        .collection('Chats')
+        .orderBy('timeDate', descending: false)
+        .snapshots();
+  }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getFreindStream(){
+  Stream<QuerySnapshot<Map<String, dynamic>>> getFreindStream() {
     return firebaseFirestore.collection('Freinds').snapshots();
   }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getSearchFreindStream(
+      String key) {
+    return firebaseFirestore
+        .collection('Freinds')
+        .where('searchKey', isEqualTo: key.substring(0, 1).toUpperCase())
+        .where('name', isEqualTo: key.substring(0, 1).toUpperCase())
+        .snapshots();
+  }
+
 ////////////////////////////////////////////////////////////////////////////////
 
   ////////////////////////GetAll
@@ -104,12 +118,12 @@ addMessageToFireStore(Map map)async{
 
   Future<List<Chat>> getAllFreindsFromFirestore() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
-    await firebaseFirestore.collection('Freinds').get();
+        await firebaseFirestore.collection('Freinds').get();
     List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = querySnapshot.docs;
-    List<Chat> freinds =
-    docs.map((e) => Chat.fromMap(e.data())).toList();
+    List<Chat> freinds = docs.map((e) => Chat.fromMap(e.data())).toList();
     return freinds;
   }
+
 ////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////Update Profile

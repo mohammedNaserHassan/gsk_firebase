@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +13,6 @@ import 'package:gsk_firebase/Chating/Models/ChatFirebase.dart';
 import 'package:gsk_firebase/Chating/Models/CountryModel.dart';
 import 'package:gsk_firebase/Chating/Models/RegisterRequest.dart';
 import 'package:gsk_firebase/Chating/Models/chat.dart';
-import 'package:gsk_firebase/Chating/Models/messages_.dart';
 import 'package:gsk_firebase/Chating/Screens/sigh_in_or_sign_up.dart';
 import 'package:gsk_firebase/Chating/Screens/welcome_page.dart';
 import 'package:gsk_firebase/Chating/Taps/chat_screen.dart';
@@ -19,12 +21,28 @@ import 'package:gsk_firebase/Services/customDialog.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-class AuthProvider extends ChangeNotifier {
 
+class AuthProvider extends ChangeNotifier {
 ////////////////////////Constructor////////////////////////
   AuthProvider(){
     getCountriesFromFirestore();
+
   }
+  ////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////
+
+  isActiveState(){
+    for(int i=0;i<freindsprovider.length;i++){
+      if(freindsprovider[i]['isActive']==true){
+        active.add(freindsprovider[i]);
+      }
+      else
+      {
+        inactive.add(freindsprovider[i]);
+      }
+      notifyListeners();
+    }}
   ////////////////////////////////////////////////
 
   /////Controller of message chat
@@ -33,7 +51,7 @@ class AuthProvider extends ChangeNotifier {
     msgController.clear();
   }
 //////////////////////////////////////////////////
-
+  TextEditingController searchController = TextEditingController();
 
   //upload Image
 
@@ -45,12 +63,58 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
   ///////////
+  /////Uploade Multi Image
+  List<Asset> images = <Asset>[];
+  Future<void>  selectMultiFiles()async {
+    List<Asset> resultList = <Asset>[];
+    String error = 'No Error Detected';
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 300,
+        enableCamera: true,
+        selectedAssets: images,
+        materialOptions: MaterialOptions(
+          actionBarColor: "#abcdef",
+          actionBarTitle: "Example App",
+          allViewTitle: "All Photos",
+          useDetailsView: false,
+          selectCircleStrokeColor: "#000000",
+        ),
+      );
+    } on Exception catch (e) {
+      error = e.toString();
+    }
+
+    File secondfile;
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat().add_jm().format(now);
+    resultList.forEach((element) async {
+      var path = await FlutterAbsolutePath.getAbsolutePath(element.identifier);
+      secondfile = File(path);
+      String imgesUrl = await fireStorageHelper.helper.uploadImage(
+          secondfile, 'categoreis');
+      fireStore_Helper.helper.addMessageToFireStore({
+        'userId': this.myId,
+        'timeDate': formattedDate,
+        'message': 'No Image Selected',
+        'imgesUrl': imgesUrl,
+      });
+    });
+        }
+
+
+
+  /////////////////////////////////////////////////////////////////////////////
 
   ///SetColor of Button////
   bool isFilled = true;
   bool isFill = false;
+  bool isActive= false;
+  List<dynamic> active=[] , inactive=[];
+List<Map> freindsprovider=[];
 bool recent=true;
   setFilled() {
+    this.isActive=!this.isActive;
     this.isFilled = !this.isFilled;
     this.isFill = !this.isFill;
     this.recent=!this.recent;
@@ -70,18 +134,72 @@ bool recent=true;
 
 //////////////////////////////
 
-///////////////////Send Message To Firebase
+  //////Select File from Phone//////
+  List<String> paths=[];
+  FilePickerResult result;
+  selectFilesToFire()async{
+    result = await FilePicker.platform.pickFiles(allowMultiple: true,type:  FileType.custom,
+      allowedExtensions: ['pdf'],);
+      List<File> files = result.files.map((path) => File(path.path)).toList();
+    File otherfile;
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat().add_jm().format(now);
+    files.forEach((element) async {
+      paths.add(element.path);
+      otherfile = File(element.path);
+      String files = await fireStorageHelper.helper.uploadImage(
+          otherfile, 'Files');
+      fireStore_Helper.helper.addMessageToFireStore({
+        'userId': this.myId,
+        'timeDate': formattedDate,
+        'message': 'No Image Selected',
+        'imgesUrl':'no images selected',
+        'files':files,
+      });
+    });
 
+notifyListeners();
+  }
+
+  /////////////////////////////////////////
+
+///////////////////Send Message To Firebase
+  ScrollController controller = ScrollController();
   String message;
   sendToFire()async{
     DateTime now = DateTime.now();
     String formattedDate = DateFormat().add_jm().format(now);
+    if(msgController.text!='')
     fireStore_Helper.helper.addMessageToFireStore({
-      'message':this.message,
+      'message':msgController.text,
       'timeDate':formattedDate
+    });
+    Future.delayed(Duration(milliseconds: 10)).then((value) {
+      controller.animateTo(controller.position.maxScrollExtent,
+          duration: Duration(milliseconds: 100),
+          curve: Curves.easeOutCubic);
     });
   }
 ////////////////////////////////////////////////////////////
+
+///////////////////Send Image To Fire
+  sendImageToFire()async{
+ XFile file;
+ file = await ImagePicker().pickImage(source: ImageSource.gallery);
+ File file2= File(file.path);
+ DateTime now = DateTime.now();
+ String formattedDate = DateFormat().add_jm().format(now);
+   String imgUrl = await fireStorageHelper.helper.uploadImage(file2,'chats');
+   fireStore_Helper.helper.addMessageToFireStore({
+       'userId':this.myId,
+       'timeDate':formattedDate,
+       'message':'No Image',
+       'imgUrl':imgUrl,
+     }
+   );
+
+  }
+
 
 ///////////////////Get Message from firebase
   List<ChatFire> chatFire;
@@ -279,6 +397,7 @@ getMessage()async{
   getAllUsers()async{
     users = await fireStore_Helper.helper.getAllUsersFromFirestore();
     users.removeWhere((element) => element.id==myId);
+    notifyListeners();
   }
   /////////////////////
 
@@ -286,6 +405,7 @@ getMessage()async{
   List<Chat> friends;
   getAllFreinds()async{
     friends = await fireStore_Helper.helper.getAllFreindsFromFirestore();
+    notifyListeners();
   }
   /////////////////////
 

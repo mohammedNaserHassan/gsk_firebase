@@ -60,7 +60,7 @@ class ChatCard extends StatelessWidget {
                     Text(
                       name,
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 16),
                     ),
                     SizedBox(height: 8),
                     Opacity(

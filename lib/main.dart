@@ -24,19 +24,22 @@ void main(){
           create: (context) => ThemeProvider(),
         )
       ],
-      child: MaterialApp(
-        routes: {
-          Login.routeName: (context) => Login(),
-          Register.routeName: (context) => Register(),
-          ResetPassword.routeName: (context) => ResetPassword(),
-          ChatScreen.routeName: (context) => ChatScreen(),
-          message_screen.routeName: (context) => message_screen(),
-          sigh_in_or_sign_up.routeName: (context) => sigh_in_or_sign_up(),
-          welcomPage.routeName: (context) => welcomPage(),
-        },
-        navigatorKey: AppRouter.appRouter.navkey,
-        debugShowCheckedModeBanner: false,
-        home: App(),
+      child: Consumer<ThemeProvider>(
+        builder: (context,provider,c)=>MaterialApp(
+          theme: provider.themeData,
+          routes: {
+            Login.routeName: (context) => Login(),
+            Register.routeName: (context) => Register(),
+            ResetPassword.routeName: (context) => ResetPassword(),
+            ChatScreen.routeName: (context) => ChatScreen(),
+            message_screen.routeName: (context) => message_screen(),
+            sigh_in_or_sign_up.routeName: (context) => sigh_in_or_sign_up(),
+            welcomPage.routeName: (context) => welcomPage(),
+          },
+          navigatorKey: AppRouter.appRouter.navkey,
+          debugShowCheckedModeBanner: false,
+          home: App(),
+        ),
       ),
     ),
   );

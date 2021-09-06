@@ -67,7 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   null
                               ? 'https://images.freeimages.com/images/small-previews/f37/cloudy'
                                   '-scotland-1392088.jpg'
-                              : provider.user.imgurl),
+                              : provider.user.imgurl,),
                         ),
                         ItemWidget(
                           label: 'Email:',

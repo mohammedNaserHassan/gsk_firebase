@@ -42,13 +42,14 @@ class people extends StatelessWidget {
                       ),
                       SizedBox(width: 10,),
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Name:'+''+provider.users[index].fName +
-                              '' +
+                          Text('Name:'+'\t\t'+provider.users[index].fName +
+                              '\t' +
                               provider.users[index].lName),
-                          Text('Email:'+''+provider.users[index].Email,style: TextStyle(fontSize: 10),),
-                          Text('Country:'+''+provider.users[index].country),
-                          Text('City:'+''+provider.users[index].city),
+                          Text('Email:'+'\t\t\t'+provider.users[index].Email,style: TextStyle(fontSize: 10),),
+                          Text('Country:'+'\t\t'+provider.users[index].country),
+                          Text('City:'+'\t\t'+provider.users[index].city),
                         ],
                       )
                     ],
