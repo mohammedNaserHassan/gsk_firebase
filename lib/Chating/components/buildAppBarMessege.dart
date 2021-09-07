@@ -28,40 +28,30 @@ class buildAppBarMessage extends StatelessWidget {
               },
             ),
             CircleAvatar(
+              radius: 25,
               backgroundImage: NetworkImage(
                   image),
             ),
-            Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(right: 50),
-                  child: Text(
-                    name,
-                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+            Container(
+              margin: EdgeInsets.only(left:20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(right: 50),
+                    child: Text(
+                      name,
+                      style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                Text('Active 8m ago', style: TextStyle(fontSize: 13)),
-              ],
+                  Text('Active 8m ago', style: TextStyle(fontSize: 13)),
+                ],
+              ),
             )
           ],
         ),
       ),
-      actions: [
-        IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.call,
-              color: Colors.white,
-              size: 25,
-            )),
-        IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.videocam_sharp,
-              color: Colors.white,
-              size: 25,
-            ))
-      ],
+
     );
   }
 }

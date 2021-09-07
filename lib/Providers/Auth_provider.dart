@@ -33,16 +33,22 @@ class AuthProvider extends ChangeNotifier {
   ////////////////////////////////////////////////
 
   isActiveState(){
+    if(freindsprovider.length>0){
     for(int i=0;i<freindsprovider.length;i++){
       if(freindsprovider[i]['isActive']==true){
         active.add(freindsprovider[i]);
       }
-      else
+      else  if(freindsprovider[i]['isActive']==false)
       {
         inactive.add(freindsprovider[i]);
       }
-      notifyListeners();
-    }}
+    }
+    }
+    else{
+      print('list is null');
+    }
+    // notifyListeners();
+  }
   ////////////////////////////////////////////////
 
   /////Controller of message chat

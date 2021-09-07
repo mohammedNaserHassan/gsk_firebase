@@ -27,7 +27,7 @@ class people extends StatelessWidget {
                 return Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: Colors.white
+                    color: Theme.of(context).backgroundColor
                   ),
                   margin: EdgeInsets.all(10),
                   padding: EdgeInsets.all(10),

@@ -117,7 +117,7 @@ class ItemWidget extends StatelessWidget {
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(15)),
+          color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(15)),
     );
   }
 }

@@ -33,7 +33,6 @@ class _BodyState extends State<Body> {
 
   @override
   void initState() {
-    Provider.of<AuthProvider>(context, listen: false).getAllFreinds();
     Provider.of<AuthProvider>(context, listen: false).isActiveState();
     super.initState();
   }

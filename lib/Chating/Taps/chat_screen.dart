@@ -9,8 +9,6 @@ import 'package:gsk_firebase/Services/Router.dart';
 import 'package:gsk_firebase/widgets/CustomInseration.dart';
 import 'package:provider/provider.dart';
 
-import 'calls.dart';
-
 class ChatScreen extends StatefulWidget {
   static final routeName = 'ChateName';
 
@@ -26,13 +24,13 @@ class _ChatScreenState extends State<ChatScreen>
   void initState() {
     super.initState();
     Provider.of<AuthProvider>(context, listen: false).tabController =
-        TabController(length: 4, vsync: this);
+        TabController(length: 3, vsync: this);
     Provider.of<AuthProvider>(context, listen: false).getUserFromFirestore();
   }
 
 
 
-  final List<Widget> _children = [Body(), people(), calls(), ProfilePage()];
+  final List<Widget> _children = [Body(), people(), ProfilePage()];
 
 
   @override
@@ -99,15 +97,6 @@ class _ChatScreenState extends State<ChatScreen>
                               ),
                               title: Text(
                                 'People',
-                                style: TextStyle(color: kPrimaryColor),
-                              )),
-                          BottomNavigationBarItem(
-                              icon: Icon(
-                                Icons.call,
-                                color: kPrimaryColor,
-                              ),
-                              title: Text(
-                                'Call',
                                 style: TextStyle(color: kPrimaryColor),
                               )),
                           BottomNavigationBarItem(

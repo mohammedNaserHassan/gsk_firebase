@@ -59,10 +59,11 @@ class body_message extends StatelessWidget {
                                       children: [
                                         messages[index]['imgesUrl'] == null &&
                                                 messages[index]['files'] == null
-                                            ? Text(
-                                                messages[index]['message'],
-                                                style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 16)
-                                              )
+                                            ? Text(messages[index]['message'],
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1
+                                                    .copyWith(fontSize: 16))
                                             : messages[index]['imgesUrl'] !=
                                                         null &&
                                                     messages[index]['files'] ==
@@ -72,22 +73,27 @@ class body_message extends StatelessWidget {
                                                 : GestureDetector(
                                                     onTap: () {
                                                       Url_lancher_helper.url
-                                                          .openWebpage('');
+                                                          .openWebpage(provider
+                                                              .result
+                                                              .paths[index]);
                                                     },
                                                     child: Image.asset(
                                                         'assets/images/pdf.png')),
                                         SizedBox(
                                           width: 8,
                                         ),
-                                        Text(
-                                          messages[index]['timeDate']
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontSize: messages[index]
-                                                          ['imgesUrl'] ==
-                                                      null
-                                                  ? 10
-                                                  : 25),
+                                        Container(
+                                          margin: EdgeInsets.only(top: 20),
+                                          child: Text(
+                                            messages[index]['timeDate']
+                                                .toString(),
+                                            style: TextStyle(
+                                                fontSize: messages[index]
+                                                            ['imgesUrl'] ==
+                                                        null
+                                                    ? 10
+                                                    : 25),
+                                          ),
                                         )
                                       ],
                                     ),
@@ -109,48 +115,39 @@ class body_message extends StatelessWidget {
                                   child: FittedBox(
                                     child: Row(
                                       children: [
-                                        messages[index]['imgesUrl'] == null
+                                        messages[index]['imgesUrl'] == null &&
+                                            messages[index]['files'] == null
                                             ? Text(
-                                                messages[index]['message'],
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              )
-                                            : Image.network(
-                                                messages[index]['imgesUrl']),
-                                        // GridView.builder(
-                                        //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                        //         crossAxisCount: 3,
-                                        //         childAspectRatio: 3 / 2,
-                                        //         crossAxisSpacing: 20,
-                                        //         mainAxisSpacing: 20),
-                                        //     itemCount: provider.images.length,
-                                        //     itemBuilder: (context,inde){
-                                        //       return Image.network(
-                                        //         messages[index]['imgesUrl'],
-                                        //         width: 20,
-                                        //       );
-                                        //     }),
+                                            messages[index]['message'],
+                                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 16)
+                                        )
+                                            : messages[index]['imgesUrl'] !=
+                                            null &&
+                                            messages[index]['files'] ==
+                                                null
+                                            ? Image.network(
+                                            messages[index]['imgesUrl'])
+                                            : GestureDetector(
+                                            onTap: () {
+                                              Url_lancher_helper.url
+                                                  .openWebpage(provider.result.paths[index]);
+                                            },
+                                            child: Image.asset(
+                                                'assets/images/pdf.png')),
                                         SizedBox(
                                           width: 8,
                                         ),
                                         Container(
-                                          margin: EdgeInsets.only(
-                                              top: messages[index]
-                                                          ['imgesUrl'] ==
-                                                      null
-                                                  ? 10
-                                                  : 3000),
+                                          margin: EdgeInsets.only(top: 20),
                                           child: Text(
                                             messages[index]['timeDate']
                                                 .toString(),
                                             style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
                                                 fontSize: messages[index]
-                                                            ['imgesUrl'] ==
-                                                        null
+                                                ['imgesUrl'] ==
+                                                    null
                                                     ? 10
-                                                    : 60),
+                                                    : 25),
                                           ),
                                         )
                                       ],
